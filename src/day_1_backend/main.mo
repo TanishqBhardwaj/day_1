@@ -3,6 +3,7 @@ import Nat8 "mo:base/Nat8";
 import Iter "mo:base/Iter";
 import Char "mo:base/Char";
 import Nat32 "mo:base/Nat32";
+import Debug "mo:base/Debug";
 
 actor {
   public query func add(n : Nat, m: Nat) : async Nat {
@@ -129,5 +130,31 @@ actor {
       };
     };
     return false;
+  };
+
+  public query func trim_whitespace(t: Text): async Text {
+    var trimmed_text = "";
+    for (char in t.chars()) {
+      if (char != ' ') {
+        trimmed_text #= Char.toText(char);
+      };
+    };
+    return trimmed_text;
+  };
+
+  public query func duplicated_character(t: Text): async Text {
+    var text = t;
+    let len = t.size();
+    var characters: [Char] = [];
+    for (char in t.chars()) {
+      characters := Array.append<Char>(characters, [char]);
+    };
+    Debug.print(debug_show(characters));
+    // for (index in Iter.range(0, len-2)) {
+    //   if (text[index] == text[index+1]) {
+    //     return text[index];
+    //   };
+    // };
+    return t;
   };
 };
