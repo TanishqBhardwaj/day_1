@@ -1,4 +1,8 @@
 import Array "mo:base/Array";
+import Nat8 "mo:base/Nat8";
+import Iter "mo:base/Iter";
+import Char "mo:base/Char";
+import Nat32 "mo:base/Nat32";
 
 actor {
   public query func add(n : Nat, m: Nat) : async Nat {
@@ -81,5 +85,49 @@ actor {
       sorted := _swap(sorted, curr_min, i);
     };
     return (sorted);
+  };
+
+  public query func nat_to_nat8(n: Nat): async Nat8 {
+      if(n > 255) { 
+          return 0; // n is too big to be representend by a Nat8, returning 0 is a personal choice you could return basically anything maybe 255 makes more sense.
+      } else {
+          return Nat8.fromNat(n);
+      };  
+  };
+
+  public query func max_number_with_n_bits(n: Nat): async Nat {
+    return 2**(n)-1;
+  };
+
+  public query func decimal_to_bits(n: Nat): async Text {
+    var m = n;
+    var bits = "";
+    while (m > 0) {
+      let rem = m % 2;
+      if (rem == 1) {
+        bits := "1" # bits;
+      } else {
+        bits := "0" # bits;
+      };
+      m := m / 2;
+    };
+    return bits;
+  };
+
+  public query func capitalize_character(c: Char): async Char {
+    let ascii_code = Char.toNat32(c);
+    if (ascii_code >= 97 and ascii_code <= 122) {
+      return (Char.fromNat32(ascii_code - 32));
+    };
+    return (Char.fromNat32(ascii_code));
+  };
+
+  public query func is_inside(t: Text, c: Char): async Bool {
+    for (char in t.chars()) {
+      if (char == c) {
+        return true;
+      };
+    };
+    return false;
   };
 };
