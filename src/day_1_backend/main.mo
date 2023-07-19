@@ -4,6 +4,9 @@ import Iter "mo:base/Iter";
 import Char "mo:base/Char";
 import Nat32 "mo:base/Nat32";
 import Debug "mo:base/Debug";
+import Text "mo:base/Text";
+import Principal "mo:base/Principal";
+import HashMap "mo:base/HashMap";
 
 actor {
   public query func add(n : Nat, m: Nat) : async Nat {
@@ -142,19 +145,92 @@ actor {
     return trimmed_text;
   };
 
-  public query func duplicated_character(t: Text): async Text {
-    var text = t;
-    let len = t.size();
-    var characters: [Char] = [];
-    for (char in t.chars()) {
-      characters := Array.append<Char>(characters, [char]);
+  // public query func duplicated_character(t: Text): async Text {
+  //   var text = t;
+  //   let len = t.size();
+  //   var characters: [Char] = [];
+  //   for (char in t.chars()) {
+  //     characters := Array.append<Char>(characters, [char]);
+  //   };
+  //   Debug.print(debug_show(characters));
+  //   // for (index in Iter.range(0, len-2)) {
+  //   //   if (text[index] == text[index+1]) {
+  //   //     return text[index];
+  //   //   };
+  //   // };
+  //   return t;
+  // };
+
+  public query func swap(arr: [Nat], i: Nat, j: Nat): async [Nat] {
+    let mutable_arr = Array.thaw<Nat>(arr);
+    mutable_arr[i] := arr[j];
+    mutable_arr[j] := arr[i];
+    return Array.freeze<Nat>(mutable_arr);
+  };
+
+  public query func init_count(n: Nat): async [Nat] {
+    let arr = Array.init<Nat>(n, 0);
+    var counter = 0;
+    for (val in arr.vals()) {
+      arr[counter] := counter;
+      counter += 1;
     };
-    Debug.print(debug_show(characters));
-    // for (index in Iter.range(0, len-2)) {
-    //   if (text[index] == text[index+1]) {
-    //     return text[index];
-    //   };
-    // };
-    return t;
+    return Array.freeze<Nat>(arr);
+  };
+
+  public query func seven(arr: [Nat]): async Text {
+    for (val in arr.vals()) {
+      if (val == 7) {
+        return "Seven is found";
+      };
+    };
+    return "Seven not found";
+  };
+
+  public query func nat_opt_to_nat(n: ?Nat, m: Nat): async Nat {
+    switch(n) {
+      case (?n) return n;
+      case (_) return m;
+    };
+  };
+
+  public query func day_of_the_week(n: Nat): async ?Text {
+    switch(n) {
+      case (1) return ?"Monday";
+      case (2) return ?"Tuesday";
+      case (3) return ?"Wednesday";
+      case (4) return ?"Thursday";
+      case (5) return ?"Friday";
+      case (6) return ?"Saturday";
+      case (7) return ?"Sunday";
+      case (_) return null;
+    };
+  };
+
+  // public query func populate_array(arr: [?Nat]): async [Nat] {
+  //   Array.map<?Nat, Nat)>(arr, func(x) {
+  //     switch(x) {
+  //       case (?x) return x;
+  //       case (_) return 0;
+  //     };
+  //   });
+  // };
+
+  // public query func sum_of_array(arr: [Nat]): async Nat {
+  //   for 
+  // };
+
+  public shared ({caller}) func is_anonymous(): async Bool {
+    return caller == Principal.fromText("2vxsx-fae");
+  };
+
+  let favoriteNumber = HashMap.HashMap<Principal, Nat>(0, Principal.equal, Principal.hash);
+
+  public shared ({caller}) func add_favorite_number(n: Nat): async () {
+    favoriteNumber.put(caller, n);
+  };
+
+  public query func show_favorite_number(): async ?Nat {
+    
   };
 };
