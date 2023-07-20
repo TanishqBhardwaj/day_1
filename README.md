@@ -1,2 +1,2 @@
 # day_1
-IC
+Motoko bootcamp
